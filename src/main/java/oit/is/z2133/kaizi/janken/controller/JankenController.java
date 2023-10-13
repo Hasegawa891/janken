@@ -21,7 +21,7 @@ public class JankenController {
    * jankenというGETリクエストがあったら sample21()を呼び出し，sample21.htmlを返す
    */
 
-  @GetMapping("/janken.html")
+  @GetMapping("/janken")
   public String janken1() {
     return "janken.html";
   }
