@@ -29,12 +29,19 @@
   </div>
   </p>
 
-    <a href="/janken/Gu">ぐー</a>
-    <a href="/janken/Tyoki">ちょき</a>
-    <a href="/janken/Pa">ぱー</a>
-    <p>[[${myhand}]]</p>
-    <p>[[${cpuhand}]]</p>
-    <p>[[${result}]]</p>
+  <p th:if="${AllResults}">
+  <h2>試合結果</h2>
+  <div th:each="results,stat:${AllResults}">
+      <tr>
+          <td>id:[[${results.id}]]</td>
+          <td>user1:[[${results.user1}]]</td>
+          <td>user2:[[${results.user2}]]</td>
+          <td>user1の手:[[${results.user1Hand}]]</td>
+          <td>user2の手:[[${results.user2Hand}]]</td>
+      </tr>
+  </div>
+  </p>
+
 </body>
 
 </html>
