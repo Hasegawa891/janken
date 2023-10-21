@@ -9,6 +9,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import oit.is.z2133.kaizi.janken.model.Janken;
@@ -53,24 +54,16 @@ public class JankenController {
       name = "Hi " + name;
 
       ArrayList<Match> AllResults = matchMapper.selectAllByMatch();
-      ArrayList<User> AllUserName = userMapper.selectAllByName();
+      ArrayList<User> AllUsers = userMapper.selectAllByUsers();
 
       model.addAttribute("AllResults", AllResults);
-      model.addAttribute("AlluserName", AllUserName);
+      model.addAttribute("AllUsers", AllUsers);
       model.addAttribute("name", name);
 
       return "janken.html";
   }
 
-  @PostMapping("/janken")
-  public String janken(@RequestParam String name, ModelMap model) {
-    name = "Hi " + name;
-    model.addAttribute("name", name);
-
-    return "janken.html";
-  }
-
-  @GetMapping("/janken/{myhand}")
+  @GetMapping("/match/{myhand}")
   public String janken1(@PathVariable String myhand, ModelMap model) {
 
     Janken janken = new Janken(myhand);
@@ -80,7 +73,18 @@ public class JankenController {
     model.addAttribute("myhand", "あなたの手 " + myhand);
     model.addAttribute("cpuhand", cpuhand);
     model.addAttribute("result", result);
-    return "janken.html";
+    return "match.html";
+  }
+
+  @GetMapping("/match")
+  public String match(@RequestParam int id,Principal prin, ModelMap model) {
+
+    User User = userMapper.selectName(id);
+    String name = prin.getName();
+
+    model.addAttribute("name", name);
+    model.addAttribute("User", User);
+    return "match.html";
   }
 
 }

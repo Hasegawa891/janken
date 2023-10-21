@@ -18,15 +18,11 @@
 
     <p>[[${name}]]</p>
 
-    <p th:if="${AlluserName}">
-      <h2>エントリー</h2>
-    <div th:each="user,stat:${AlluserName}">
-      <ul>
-    <tr>
-      <li><td>[[${user.name}]]</td></li>
-    </tr>
-    </ul>
-  </div>
+    <p th:if="${AllUsers}">
+    <h2>エントリー</h2>
+    <ul>
+    <li th:each="user,stat:${AllUsers}"><a th:href="@{/match(id=${user.id})}">[[${user.name}]]</li></a>
+  </ul>
   </p>
 
   <p th:if="${AllResults}">
@@ -43,5 +39,4 @@
   </p>
 
 </body>
-
 </html>
