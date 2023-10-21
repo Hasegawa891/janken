@@ -10,7 +10,10 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserMapper {
 
-  @Select("SELECT name from users")
-  ArrayList<User> selectAllByName();
+  @Select("SELECT * from users")
+  ArrayList<User> selectAllByUsers();
+
+  @Select("SELECT name from users WHERE id=#{id}")
+  User selectName(int id);
 
 }
