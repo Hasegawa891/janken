@@ -1,6 +1,7 @@
 package oit.is.z2133.kaizi.janken.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import oit.is.z2133.kaizi.janken.model.Janken;
 import oit.is.z2133.kaizi.janken.model.Entry;
+import oit.is.z2133.kaizi.janken.model.User;
+import oit.is.z2133.kaizi.janken.model.UserMapper;
 
 /**
  *
@@ -21,16 +24,33 @@ import oit.is.z2133.kaizi.janken.model.Entry;
 public class JankenController {
 
     @Autowired
-  private Entry entry;
+    private Entry entry;
+    @Autowired
+    UserMapper userMapper;
 
-  @GetMapping("/janken")
+  /*@GetMapping("/janken")
+  public String janken1(Principal prin, ModelMap model) {
+    String loginUser = prin.getName();
+    String name = prin.getName();
+    name = "Hi " + name;
+
+    ArrayList<User> AllUserName = userMapper.selectAllByName();
+    model.addAttribute("AlluserName", AllUserName);
+    this.entry.addUser(loginUser);
+    model.addAttribute("name", name);
+    model.addAttribute("entry", this.entry);
+
+    return "janken.html";
+  }*/
+
+    @GetMapping("/janken")
     public String janken1(Principal prin, ModelMap model) {
-      String loginUser = prin.getName();
       String name = prin.getName();
       name = "Hi " + name;
-      this.entry.addUser(loginUser);
+
+      ArrayList<User> AllUserName = userMapper.selectAllByName();
+      model.addAttribute("AlluserName", AllUserName);
       model.addAttribute("name", name);
-      model.addAttribute("entry", this.entry);
 
       return "janken.html";
   }
