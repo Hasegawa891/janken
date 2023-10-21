@@ -12,13 +12,23 @@
   <div th:if="${entry}">
     エントリー
     <ul>
-      <!--eachは所謂for each．この場合entryオブジェクトのusersフィールドにあるすべてのデータを一通り表示する
-        thが指定されているので[]が不要になる-->
       <li th:each="user : ${entry.users}">[[${user}]]</li>
     </ul>
   </div>
 
     <p>[[${name}]]</p>
+
+    <p th:if="${AlluserName}">
+      <h2>エントリー</h2>
+    <div th:each="user,stat:${AlluserName}">
+      <ul>
+    <tr>
+      <li><td>[[${user.name}]]</td></li>
+    </tr>
+    </ul>
+  </div>
+  </p>
+
     <a href="/janken/Gu">ぐー</a>
     <a href="/janken/Tyoki">ちょき</a>
     <a href="/janken/Pa">ぱー</a>
