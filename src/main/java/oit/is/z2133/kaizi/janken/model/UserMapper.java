@@ -13,7 +13,9 @@ public interface UserMapper {
   @Select("SELECT * from users")
   ArrayList<User> selectAllByUsers();
 
-  @Select("SELECT name from users WHERE id=#{id}")
+  @Select("SELECT * from users WHERE id=#{id}")
   User selectName(int id);
 
+  @Select("SELECT id from users WHERE name=#{name}")
+  User selectId(String name);
 }
