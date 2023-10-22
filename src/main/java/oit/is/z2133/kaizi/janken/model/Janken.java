@@ -10,13 +10,13 @@ public class Janken {
     this.cpuhand = "Gu";
 
     if (myhand.equals("Gu")) {
-      this.result = "Draw!";
+      this.result = "Draw";
 
-    } else if (myhand.equals("Tyoki")) {
-      this.result = "You Lose!";
+    } else if (myhand.equals("Choki")) {
+      this.result = "You Lose";
 
     } else {
-      this.result = "You Win!";
+      this.result = "You Win";
     }
   }
 

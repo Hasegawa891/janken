@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,7 +64,7 @@ public class JankenController {
       return "janken.html";
   }
 
-  @GetMapping("/match/{myhand}")
+  /*@GetMapping("/match/{myhand}")
   public String janken1(@PathVariable String myhand, ModelMap model) {
 
     Janken janken = new Janken(myhand);
@@ -74,10 +75,10 @@ public class JankenController {
     model.addAttribute("cpuhand", cpuhand);
     model.addAttribute("result", result);
     return "match.html";
-  }
+  }*/
 
   @GetMapping("/match")
-  public String match(@RequestParam int id,Principal prin, ModelMap model) {
+  public String match(@RequestParam int id, Principal prin, ModelMap model) {
 
     User User = userMapper.selectName(id);
     String name = prin.getName();
@@ -87,4 +88,42 @@ public class JankenController {
     return "match.html";
   }
 
+  @GetMapping("/match/{myHand}")
+  public String Hand(@PathVariable String myHand, ModelMap model) {
+
+    Janken janken = new Janken(myHand);
+    String result = janken.getresult();
+    model.addAttribute("myHand", myHand);
+    model.addAttribute("cpuHand", janken.getcpuhand());
+    model.addAttribute("result", result);
+    return "match.html";
+  }
+
+  @GetMapping("/fight")
+  @Transactional
+  public String Game(@RequestParam String myHand, @RequestParam int id, Principal prin, ModelMap model) {
+
+    String name = prin.getName();
+    User User1 = userMapper.selectName(id);
+    User User2 = userMapper.selectId(name);
+
+    Janken janken = new Janken(myHand);
+
+    Match match = new Match();
+    match.setUser1(id);
+    match.setUser2(User2.getId());
+    match.setUser1Hand(janken.getcpuhand());
+    match.setUser2Hand(janken.getmyhand());
+
+    matchMapper.insertMatch(match);
+
+    model.addAttribute("name", name);
+    model.addAttribute("User", User1);
+
+    model.addAttribute("myHand", "あなたの手 " + myHand);
+    model.addAttribute("cpuHand", "相手の手 " + janken.getcpuhand());
+    model.addAttribute("result", "結果 " + janken.getresult());
+
+    return "match.html";
+  }
 }

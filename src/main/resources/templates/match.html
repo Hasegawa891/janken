@@ -17,13 +17,21 @@
       <h1>[[${name}]] V.S. [[${user.name}]]</h1>
     </tr>
   </div>
+
   </p>
 
-  <div>
-    <a href="/match/Gu">ぐー</a>
-    <a href="/match/Choki">ちょき</a>
-    <a href="/match/Pa">ぱー</a>
+  <div th:each="user : ${User}">
+    <a th:href="@{/fight?myHand=Gu&(id=${user.id})}">ぐー</a>
+    <a th:href="@{/fight?myHand=Choki&(id=${user.id})}">ちょき</a>
+    <a th:href="@{/fight?myHand=Pa&(id=${user.id})}">ぱー</a>
   </div>
+
+  <p th:if="${reslut}">
+    <p>[[${myHand}]]</p>
+    <p>[[${cpuHand}]]</p>
+    <p>[[${result}]]</p>
+
+  </p>
 
   <a href="/janken">もどる</a>
 </body>
