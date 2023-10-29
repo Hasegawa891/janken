@@ -21,9 +21,9 @@
   </p>
 
   <div th:each="user : ${User}">
-    <a th:href="@{/fight?myHand=Gu&(id=${user.id})}">ぐー</a>
-    <a th:href="@{/fight?myHand=Choki&(id=${user.id})}">ちょき</a>
-    <a th:href="@{/fight?myHand=Pa&(id=${user.id})}">ぱー</a>
+    <a th:href="@{/wait?myHand=Gu&(id=${user.id})}">ぐー</a>
+    <a th:href="@{/wait?myHand=Choki&(id=${user.id})}">ちょき</a>
+    <a th:href="@{/wait?myHand=Pa&(id=${user.id})}">ぱー</a>
   </div>
 
   <p th:if="${reslut}">
