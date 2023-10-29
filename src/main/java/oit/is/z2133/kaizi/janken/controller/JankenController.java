@@ -61,8 +61,11 @@ public class JankenController {
       ArrayList<Match> AllResults = matchMapper.selectAllByMatch();
       ArrayList<User> AllUsers = userMapper.selectAllByUsers();
 
+      ArrayList<MatchInfo> active = matchinfoMapper.selectActiveMatchInfo();
+
       model.addAttribute("AllResults", AllResults);
       model.addAttribute("AllUsers", AllUsers);
+      model.addAttribute("Active", active);
       model.addAttribute("name", name);
 
       return "janken.html";
