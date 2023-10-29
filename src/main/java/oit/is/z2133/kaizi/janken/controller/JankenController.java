@@ -19,6 +19,8 @@ import oit.is.z2133.kaizi.janken.model.User;
 import oit.is.z2133.kaizi.janken.model.UserMapper;
 import oit.is.z2133.kaizi.janken.model.Match;
 import oit.is.z2133.kaizi.janken.model.MatchMapper;
+import oit.is.z2133.kaizi.janken.model.MatchInfo;
+import oit.is.z2133.kaizi.janken.model.MatchInfoMapper;
 
 /**
  *
@@ -33,6 +35,8 @@ public class JankenController {
     UserMapper userMapper;
     @Autowired
     MatchMapper matchMapper;
+    @Autowired
+    MatchInfoMapper matchinfoMapper;
 
   /*@GetMapping("/janken")
   public String janken1(Principal prin, ModelMap model) {
@@ -125,5 +129,31 @@ public class JankenController {
     model.addAttribute("result", "結果 " + janken.getresult());
 
     return "match.html";
+  }
+
+  @GetMapping("/wait")
+  @Transactional
+  public String wait(@RequestParam String myHand, @RequestParam int id, Principal prin, ModelMap model) {
+
+    String name = prin.getName();
+   User User2 = userMapper.selectId(name);
+
+    Janken janken = new Janken(myHand);
+
+    MatchInfo matchinfo = new MatchInfo();
+    matchinfo.setUser1(id);
+    matchinfo.setUser2(User2.getId());
+    matchinfo.setUser1Hand(janken.getmyhand());
+    matchinfo.setActive(true);
+
+    matchinfoMapper.insertMatchInfo(matchinfo);
+
+    model.addAttribute("name", "Hi " + name);
+    /*
+    model.addAttribute("myHand", "あなたの手 " + myHand);
+    model.addAttribute("cpuHand", "相手の手 " + janken.getcpuhand());
+    model.addAttribute("result", "結果 " + janken.getresult());*/
+
+    return "wait.html";
   }
 }
