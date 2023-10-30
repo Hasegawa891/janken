@@ -2,8 +2,10 @@ package oit.is.z2133.kaizi.janken.model;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.annotations.Insert;
 //import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 //import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
@@ -18,4 +20,8 @@ public interface UserMapper {
 
   @Select("SELECT id from users WHERE name=#{name}")
   User selectId(String name);
+
+  @Insert("INSERT INTO users (name) VALUES (#{name});")
+  @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
+  void insertUser(User user1);
 }
