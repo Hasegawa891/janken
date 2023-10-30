@@ -3,6 +3,8 @@ package oit.is.z2133.kaizi.janken.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,11 +14,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import oit.is.z2133.kaizi.janken.model.Janken;
 import oit.is.z2133.kaizi.janken.model.Entry;
 import oit.is.z2133.kaizi.janken.model.User;
 import oit.is.z2133.kaizi.janken.model.UserMapper;
+import oit.is.z2133.kaizi.janken.service.AsyncKekka;
 import oit.is.z2133.kaizi.janken.model.Match;
 import oit.is.z2133.kaizi.janken.model.MatchMapper;
 import oit.is.z2133.kaizi.janken.model.MatchInfo;
@@ -37,6 +41,9 @@ public class JankenController {
     MatchMapper matchMapper;
     @Autowired
     MatchInfoMapper matchinfoMapper;
+
+    @Autowired
+    AsyncKekka kekka;
 
   /*@GetMapping("/janken")
   public String janken1(Principal prin, ModelMap model) {
@@ -139,17 +146,34 @@ public class JankenController {
   public String wait(@RequestParam String myHand, @RequestParam int id, Principal prin, ModelMap model) {
 
     String name = prin.getName();
-   User User2 = userMapper.selectId(name);
+    User User1 = userMapper.selectId(name);
 
     Janken janken = new Janken(myHand);
 
     MatchInfo matchinfo = new MatchInfo();
-    matchinfo.setUser1(id);
-    matchinfo.setUser2(User2.getId());
+    matchinfo.setUser1(User1.getId());
+    matchinfo.setUser2(id);
     matchinfo.setUser1Hand(janken.getmyhand());
     matchinfo.setActive(true);
 
-    matchinfoMapper.insertMatchInfo(matchinfo);
+    ArrayList<MatchInfo> matchInfoList = matchinfoMapper.selectMyIdMatchInfo();
+
+    int flag = 0;
+
+    for (MatchInfo temp : matchInfoList) {
+      if (temp.getUser2() == matchinfo.getUser1()) {
+        flag = 1;
+      }
+
+    }
+
+    if (flag == 1) {
+      matchinfoMapper.updateUser2HandMatchInfo(matchinfo);
+      matchMapper.insertActiveMatchInfo(matchinfoMapper.selectMyMatch(User1.getId()));
+
+    } else {
+      matchinfoMapper.insertMatchInfo(matchinfo);
+    }
 
     model.addAttribute("name", "Hi " + name);
     /*
@@ -157,6 +181,20 @@ public class JankenController {
     model.addAttribute("cpuHand", "相手の手 " + janken.getcpuhand());
     model.addAttribute("result", "結果 " + janken.getresult());*/
 
+    int a = this.kekka.syncActiveMatch();
+
+    if(a == 1){
+      Match result = matchMapper.selectActiveMatch();
+      model.addAttribute("result", result);
+    }
+
     return "wait.html";
+  }
+
+    @GetMapping("/kekka")
+  public SseEmitter wait1() {
+    final SseEmitter sseEmitter = new SseEmitter();
+    this.kekka.asyncShowFruitsList(sseEmitter);
+    return sseEmitter;
   }
 }

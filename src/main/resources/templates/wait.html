@@ -4,6 +4,34 @@
 <head>
   <meta charset="utf-8">
   <title>wait</title>
+    <script>
+      window.onload = function () {
+        var sse = new EventSource('/kekka');
+      sse.onmessage = function (event) {
+        console.log("sse.onmessage")
+        console.log(event.data);
+        var match_list = JSON.parse(event.data);//JSONオブジェクトとしてparse
+        var match_table = "";
+        // DBに残っているフルーツのリストがJSONオブジェクトとして得られるので，htmlを作成し，tbodyの中身毎入れ替える
+        for (var i = 0; i < match_list.length; i++) {
+          var bgn_tr = "<tr>";
+          var end_tr = "</tr>";
+          var f_id = "<td>" + match_list[i].id + "</td>";
+          var f_user1 = "<td>" + match_list[i].user1 + "</td>";
+          var f_user2 = "<td>" + match_list[i].user2 + "</td>";
+          var f_user1Hand = "<td>" + match_list[i].user1Hand + "</td>";
+          var f_user2Hand = "<td>" + match_list[i].user2Hand + "</td>";
+
+          match_table = match_table + bgn_tr + f_id + f_user1 + f_user2 + f_user1Hand + f_user2Hand + end_tr;
+
+        }
+        console.log(match_table);
+        var tbody = document.getElementById("match_list");
+        tbody.innerHTML = match_table;//idがfruits_listのtbodyのHTMLを差し替える
+
+      }
+      }
+    </script>
 </head>
 
 <body>
@@ -11,5 +39,22 @@
   <h1>相手の手を待っています</h1>
 
   <p>[[${name}]]</p>
+
+
+<tbody id="fruits_list">
+  <p th:if="${result}">
+    <div th:each="result,stat:${result}">
+      <h2>結果</h2>
+      <tr>
+        <td>Match:id [[${result.id}]]</td>
+        <td>user1:[[${result.user1}]]</td>
+        <td>user2:[[${result.user2}]]</td>
+        <td>user1Hand:[[${result.user1Hand}]]</td>
+        <td>user1Hand:[[${result.user2Hand}]]</td><br>
+        <td><a href="/janken">もどる</a></td>
+      </tr>
+    </div>
+  </p>
+  </tbody>
 
 </body>
